@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { classNames } from '../../utils';
 
 import SidebarChannels from '../SidebarChannels';
+import SidebarUsers from '../SidebarUsers';
 
 type Props = {
   navigation: any[];
@@ -47,6 +48,7 @@ export default function DesktopSidebar({ navigation }: Props) {
             ))}
           </nav>
           <SidebarChannels />
+          <SidebarUsers />
         </div>
       </div>
     </div>

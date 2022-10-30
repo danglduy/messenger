@@ -3,6 +3,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { classNames } from '../../utils';
 import SidebarChannels from '../SidebarChannels';
+import SidebarUsers from '../SidebarUsers';
 
 type Props = {
   sidebarOpen: boolean;
@@ -102,6 +103,7 @@ export default function MobileSidebar({
                   ))}
                 </nav>
                 <SidebarChannels />
+                <SidebarUsers />
               </div>
             </Dialog.Panel>
           </Transition.Child>
