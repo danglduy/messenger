@@ -11,5 +11,6 @@ module.exports = {
   rules: {
     'prettier/prettier': ['error', prettierOptions],
     'jsx-a11y/alt-text': 'off',
+    'import/no-anonymous-default-export': 'off',
   },
 };
