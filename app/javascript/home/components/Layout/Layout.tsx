@@ -21,7 +21,7 @@ const userNavigation = [
   { name: 'Sign out', href: '#' },
 ];
 
-export function Home() {
+export function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
