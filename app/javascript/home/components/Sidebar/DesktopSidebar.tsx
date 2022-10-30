@@ -1,5 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { classNames } from '../../utils';
+
+import SidebarChannels from '../SidebarChannels';
 
 type Props = {
   navigation: any[];
@@ -17,12 +20,12 @@ export default function DesktopSidebar({ navigation }: Props) {
             alt="Your Company"
           />
         </div>
-        <div className="flex flex-1 flex-col overflow-y-auto">
-          <nav className="flex-1 space-y-1 px-2 py-4">
+        <div className="flex flex-1 flex-col overflow-y-auto divide-y-2 divide-slate-700">
+          <nav className="space-y-1 px-2 py-4">
             {navigation.map((item) => (
-              <a
+              <Link
                 key={item.name}
-                href={item.href}
+                to={item.href}
                 className={classNames(
                   item.current
                     ? 'bg-gray-900 text-white'
@@ -40,9 +43,10 @@ export default function DesktopSidebar({ navigation }: Props) {
                   aria-hidden="true"
                 />
                 {item.name}
-              </a>
+              </Link>
             ))}
           </nav>
+          <SidebarChannels />
         </div>
       </div>
     </div>
