@@ -3,33 +3,23 @@ import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
   Bars3BottomLeftIcon,
   BellIcon,
-  CalendarIcon,
-  ChartBarIcon,
-  FolderIcon,
-  HomeIcon,
-  InboxIcon,
+  ClockIcon,
   UsersIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import { classNames } from '../../utils';
 
 const navigation = [
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Team', href: '#', icon: UsersIcon, current: false },
-  { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-  { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Documents', href: '#', icon: InboxIcon, current: false },
-  { name: 'Reports', href: '#', icon: ChartBarIcon, current: false },
+  { name: 'Users', href: '#', icon: UsersIcon, current: true },
+  { name: 'Active', href: '#', icon: ClockIcon, current: false },
 ];
+
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
   { name: 'Settings', href: '#' },
   { name: 'Sign out', href: '#' },
 ];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
 
 export function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
