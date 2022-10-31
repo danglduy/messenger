@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../store';
+import { fetchCurrentUserApi } from './globalApi';
 
 export interface User {
   id: number;
@@ -14,15 +16,27 @@ export const initialState: GlobalState = {
   currentUser: null,
 };
 
+export const fetchCurrentUser = createAsyncThunk(
+  'global/fetchCurrentUser',
+  async () => {
+    const { data } = await fetchCurrentUserApi();
+    return { user: data.data };
+  }
+);
+
 const globalSlice = createSlice({
   name: 'global',
   initialState,
-  reducers: {
-    setUser(state, action: PayloadAction<{ user: User }>) {
-      state.currentUser = action.payload.user;
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchCurrentUser.fulfilled, (state, action) => {
+      const { user } = action.payload;
+
+      state.currentUser = user;
+    });
   },
 });
 
-export const { setUser } = globalSlice.actions;
+export const selectGlobal = (state: RootState) => state.global;
+
 export default globalSlice.reducer;

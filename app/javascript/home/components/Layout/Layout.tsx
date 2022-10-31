@@ -1,10 +1,12 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { Bars3BottomLeftIcon, BellIcon } from '@heroicons/react/24/outline';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 
 import { classNames } from '../../utils';
 import Sidebar from '../Sidebar';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchCurrentUser, selectGlobal } from '../../store/global/globalSlice';
 
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
@@ -14,6 +16,15 @@ const userNavigation = [
 
 export function Layout({ children }: { children?: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const { currentUser } = useAppSelector(selectGlobal);
+
+  useEffect(() => {
+    if (!currentUser) {
+      dispatch(fetchCurrentUser());
+    }
+  }, [currentUser, dispatch]);
 
   return (
     <>

@@ -10,6 +10,10 @@ Rails.application.routes.draw do
       resources :messages, only: [:index, :create]
     end
 
-    resources :users, only: [:index]
+    resources :users, only: [:index] do
+      collection do
+        get :me
+      end
+    end
   end
 end
