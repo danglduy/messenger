@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import globalSlice from './global/slice';
-import sidebarSlice from './sidebar/slice';
+import globalSlice from './global/globalSlice';
+import sidebarSlice from './sidebar/sidebarSlice';
 
 export const store = configureStore({
   reducer: {

@@ -26,5 +26,4 @@ const globalSlice = createSlice({
   reducers: {},
 });
 
-export const {} = globalSlice.actions;
 export default globalSlice.reducer;
