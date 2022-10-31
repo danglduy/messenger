@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import globalSlice from './global/globalSlice';
-import sidebarSlice from './sidebar/sidebarSlice';
+import globalReducer from './global/globalSlice';
+import sidebarReducer from './sidebar/sidebarSlice';
 
 export const store = configureStore({
   reducer: {
-    global: globalSlice,
-    sidebar: sidebarSlice,
+    global: globalReducer,
+    sidebar: sidebarReducer,
   },
 });
 
