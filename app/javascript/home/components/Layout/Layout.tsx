@@ -2,17 +2,12 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { Bars3BottomLeftIcon, BellIcon } from '@heroicons/react/24/outline';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
+import axios from 'axios';
 
 import { classNames } from '../../utils';
 import Sidebar from '../Sidebar';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchCurrentUser, selectGlobal } from '../../store/global/globalSlice';
-
-const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
-];
 
 export function Layout({ children }: { children?: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,6 +20,18 @@ export function Layout({ children }: { children?: React.ReactNode }) {
       dispatch(fetchCurrentUser());
     }
   }, [currentUser, dispatch]);
+
+  const logout = async () => {
+    const csrfToken = (
+      document.getElementsByName('csrf-token')[0] as HTMLMetaElement
+    ).content;
+
+    try {
+      await axios.delete('/logout', { headers: { 'X-CSRF-Token': csrfToken } });
+    } catch {} // There were something wrong with axios after logout
+
+    window.location.reload();
+  };
 
   return (
     <>
@@ -94,21 +101,19 @@ export function Layout({ children }: { children?: React.ReactNode }) {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      {userNavigation.map((item) => (
-                        <Menu.Item key={item.name}>
-                          {({ active }) => (
-                            <a
-                              href={item.href}
-                              className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
-                              )}
-                            >
-                              {item.name}
-                            </a>
-                          )}
-                        </Menu.Item>
-                      ))}
+                      <Menu.Item>
+                        {({ active }) => (
+                          <span
+                            className={classNames(
+                              active ? 'bg-gray-100' : '',
+                              'block px-4 py-2 text-sm text-gray-700 hover:cursor-pointer'
+                            )}
+                            onClick={logout}
+                          >
+                            Logout
+                          </span>
+                        )}
+                      </Menu.Item>
                     </Menu.Items>
                   </Transition>
                 </Menu>
