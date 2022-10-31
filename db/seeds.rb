@@ -7,12 +7,12 @@
 #   Character.create(name: "Luke", movie: movies.first)
 
 user1 = User.where(email: "user@domain.com")
-            .first_or_create(password: "12345678")
+            .first_or_create(name: "User 1", password: "12345678")
 
 user2 = User.where(email: "user2@domain.com")
-            .first_or_create(password: "12345678")
+            .first_or_create(name: "User 2", password: "12345678")
 
-channel1 = Channel.where(name: "channel_1").first_or_create
+channel1 = Channel.where(name: "Channel 1").first_or_create
 channel1.users = [user1, user2]
 channel1.save!
 
