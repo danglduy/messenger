@@ -10,7 +10,7 @@ type Props = {
 };
 
 const navigation = [
-  { name: 'Users', href: '#', icon: UsersIcon, current: true },
+  { name: 'Users', href: '#', icon: UsersIcon, current: false },
   { name: 'Active', href: '#', icon: ClockIcon, current: false },
 ];
 

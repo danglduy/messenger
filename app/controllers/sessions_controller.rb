@@ -10,7 +10,9 @@ class SessionsController < ApplicationController
 
     if user&.authenticate(params[:user][:password])
       login_user(user)
-      redirect_to root_path
+
+      # FIXME: replace the status. For now this is necessary to make redirecting work.
+      redirect_to root_path, status: :unprocessable_entity
     else
       render :new, status: :unprocessable_entity
     end
