@@ -1,10 +1,15 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+} from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { fetchChannelsApi, fetchUsersApi } from './sidebarApi';
 
 export interface Channel {
   id: number;
   name: string;
+  channel_type: 'group' | 'direct';
 }
 
 export interface User {
@@ -57,5 +62,12 @@ const globalSlice = createSlice({
 });
 
 export const selectSidebar = (state: RootState) => state.sidebar;
+export const selectChannels = createSelector(
+  selectSidebar,
+  (state) => state.channels
+);
+export const selectGroupChannels = createSelector(selectChannels, (channels) =>
+  channels.filter((channel) => channel.channel_type === 'group')
+);
 
 export default globalSlice.reducer;
