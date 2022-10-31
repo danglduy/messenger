@@ -5,5 +5,5 @@ class Channel < ApplicationRecord
   enum channel_type: {
     group: 0,
     direct: 1,
-  }
+  }, _prefix: true
 end
