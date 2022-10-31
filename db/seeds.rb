@@ -16,3 +16,7 @@ channel1 = Channel.where(name: "Channel 1").first_or_create
 channel1.users = [user1, user2]
 channel1.save!
 
+Message.where(channel: channel1, user: user1)
+                 .first_or_create(content: "First message")
+Message.where(channel: channel1, user: user2)
+                 .first_or_create(content: "Second message")

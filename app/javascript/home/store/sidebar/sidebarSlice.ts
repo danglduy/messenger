@@ -45,7 +45,7 @@ export const fetchUsers = createAsyncThunk('sidebar/fetchUsers', async () => {
   return data.data;
 });
 
-const globalSlice = createSlice({
+const sidebarSlice = createSlice({
   name: 'sidebar',
   initialState,
   reducers: {},
@@ -70,4 +70,4 @@ export const selectGroupChannels = createSelector(selectChannels, (channels) =>
   channels.filter((channel) => channel.channel_type === 'group')
 );
 
-export default globalSlice.reducer;
+export default sidebarSlice.reducer;
