@@ -1,6 +1,7 @@
 class Channel < ApplicationRecord
   has_many :participations, dependent: :destroy
   has_many :users, through: :participations
+  has_many :messages
 
   enum channel_type: {
     group: 0,
