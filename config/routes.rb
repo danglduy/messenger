@@ -4,4 +4,9 @@ Rails.application.routes.draw do
   get :login, to: 'sessions#new'
   post :login, to: 'sessions#create'
   delete :logout, to: 'sessions#destroy'
+
+  namespace :api do
+    resources :channels, only: [:index]
+    resources :users, only: [:index]
+  end
 end

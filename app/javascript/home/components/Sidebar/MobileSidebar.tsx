@@ -2,6 +2,8 @@ import React, { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { classNames } from '../../utils';
+import SidebarChannels from '../SidebarChannels';
+import SidebarUsers from '../SidebarUsers';
 
 type Props = {
   sidebarOpen: boolean;
@@ -74,8 +76,8 @@ export default function MobileSidebar({
                   alt="Your Company"
                 />
               </div>
-              <div className="mt-5 h-0 flex-1 overflow-y-auto">
-                <nav className="space-y-1 px-2">
+              <div className="mt-5 h-0 flex-1 overflow-y-auto divide-y-2 divide-slate-700">
+                <nav className="space-y-1 px-2 py-4">
                   {navigation.map((item) => (
                     <a
                       key={item.name}
@@ -100,6 +102,8 @@ export default function MobileSidebar({
                     </a>
                   ))}
                 </nav>
+                <SidebarChannels />
+                <SidebarUsers />
               </div>
             </Dialog.Panel>
           </Transition.Child>
