@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   delete :logout, to: 'sessions#destroy'
 
   namespace :api do
-    resources :channels, only: [:index] do
+    resources :channels, only: [:index, :create] do
       resources :messages, only: [:index, :create]
     end
 
