@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../sidebar/sidebarSlice';
 import { RootState } from '../store';
 import { fetchMessagesApi, sendMessageApi } from './messagesApi';
@@ -46,7 +46,19 @@ export const sendMessage = createAsyncThunk(
 const messagesSlice = createSlice({
   name: 'messages',
   initialState,
-  reducers: {},
+  reducers: {
+    addMessage: (state, action: PayloadAction<Message>) => {
+      const message = action.payload;
+
+      if (
+        !state.messages
+          .map((stateMessage) => stateMessage.id)
+          .includes(message.id)
+      ) {
+        state.messages.push(message);
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchMessages.fulfilled, (state, action) => {
       const { messages, channelId } = action.payload;
@@ -57,11 +69,18 @@ const messagesSlice = createSlice({
     builder.addCase(sendMessage.fulfilled, (state, action) => {
       const { message } = action.payload;
 
-      state.messages.push(message);
+      if (
+        !state.messages
+          .map((stateMessage) => stateMessage.id)
+          .includes(message.id)
+      ) {
+        state.messages.push(message);
+      }
     });
   },
 });
 
 export const selectMessagesState = (state: RootState) => state.messages;
+export const { addMessage } = messagesSlice.actions;
 
 export default messagesSlice.reducer;

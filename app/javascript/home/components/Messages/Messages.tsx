@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
+  addMessage,
   fetchMessages,
   Message,
   selectMessagesState,
@@ -9,6 +10,7 @@ import {
 } from '../../store/messages/messagesSlice';
 import { selectChannels } from '../../store/sidebar/sidebarSlice';
 import Layout from '../Layout';
+import consumer from '../../utils/actioncableConsumer';
 
 type MessageListProps = {
   messages: Message[];
@@ -47,8 +49,30 @@ export function Messages() {
   const [messageContent, setMessageContent] = useState('');
 
   useEffect(() => {
-    if (params.id && params.id !== String(channelId)) {
-      dispatch(fetchMessages({ channelId: parseInt(params.id) }));
+    if (params.id) {
+      if (params.id !== String(channelId)) {
+        dispatch(fetchMessages({ channelId: parseInt(params.id) }));
+      }
+
+      const subscriber = consumer.subscriptions.create(
+        { channel: 'MessagesChannel', channel_id: params.id },
+        {
+          received(action: { type: 'ADD_MESSAGE'; payload: Message }) {
+            switch (action.type) {
+              case 'ADD_MESSAGE': {
+                dispatch(addMessage(action.payload));
+                break;
+              }
+              default:
+                break;
+            }
+          },
+        }
+      );
+
+      return () => {
+        subscriber.unsubscribe();
+      };
     }
   }, [dispatch, channelId, params?.id]);
 
