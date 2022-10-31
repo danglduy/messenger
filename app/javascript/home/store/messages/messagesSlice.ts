@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { User } from '../sidebar/sidebarSlice';
 import { RootState } from '../store';
-import { fetchMessagesApi } from './messagesApi';
+import { fetchMessagesApi, sendMessageApi } from './messagesApi';
 
 export interface Message {
   id: number;
@@ -29,6 +29,20 @@ export const fetchMessages = createAsyncThunk(
   }
 );
 
+export const sendMessage = createAsyncThunk(
+  'messages/sendMessage',
+  async ({
+    channelId,
+    messageContent,
+  }: {
+    channelId: number;
+    messageContent: string;
+  }) => {
+    const { data } = await sendMessageApi({ channelId, messageContent });
+    return { message: data.data };
+  }
+);
+
 const messagesSlice = createSlice({
   name: 'messages',
   initialState,
@@ -39,6 +53,11 @@ const messagesSlice = createSlice({
 
       state.channelId = channelId;
       state.messages = messages;
+    });
+    builder.addCase(sendMessage.fulfilled, (state, action) => {
+      const { message } = action.payload;
+
+      state.messages.push(message);
     });
   },
 });

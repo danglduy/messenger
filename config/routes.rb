@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :channels, only: [:index] do
-      resources :messages, only: [:index]
+      resources :messages, only: [:index, :create]
     end
 
     resources :users, only: [:index]

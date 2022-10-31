@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   fetchMessages,
   Message,
   selectMessagesState,
+  sendMessage,
 } from '../../store/messages/messagesSlice';
 import { selectChannels } from '../../store/sidebar/sidebarSlice';
 import Layout from '../Layout';
@@ -43,6 +44,8 @@ export function Messages() {
     [channelId, channels]
   );
 
+  const [messageContent, setMessageContent] = useState('');
+
   useEffect(() => {
     if (params.id && params.id !== String(channelId)) {
       dispatch(fetchMessages({ channelId: parseInt(params.id) }));
@@ -52,6 +55,25 @@ export function Messages() {
   const messagesVisible = useMemo(() => {
     return String(channelId) === params.id;
   }, [channelId, params?.id]);
+
+  const onMessageContentChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setMessageContent(e.currentTarget.value);
+    },
+    []
+  );
+
+  const onSendMessage = useCallback(
+    (_e: React.MouseEvent<HTMLButtonElement>) => {
+      if (messageContent.trim().length > 0) {
+        dispatch(
+          sendMessage({ channelId, messageContent: messageContent.trim() })
+        );
+        setMessageContent('');
+      }
+    },
+    [dispatch, channelId, messageContent]
+  );
 
   return (
     <Layout>
@@ -74,11 +96,17 @@ export function Messages() {
                 type="text"
                 name="message-content"
                 id="message-content"
+                value={messageContent}
+                onChange={onMessageContentChange}
                 className="block w-full rounded-md border-gray-300 shadow-sm placeholder-slate-200 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 placeholder={`Message ${channel?.name || ''}`}
               />
             </div>
-            <button className="mt-0 ml-3 w-auto text-sm inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            <button
+              onClick={onSendMessage}
+              disabled={messageContent.length === 0}
+              className="mt-0 ml-3 w-auto text-sm inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed"
+            >
               Send
             </button>
           </div>
