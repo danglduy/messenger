@@ -4,7 +4,11 @@ import {
   createSlice,
 } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import { fetchChannelsApi, fetchUsersApi } from './sidebarApi';
+import {
+  fetchChannelsApi,
+  fetchUsersApi,
+  createDirectConversationApi,
+} from './sidebarApi';
 
 export interface Channel {
   id: number;
@@ -23,6 +27,7 @@ export interface SidebarState {
   readonly channelsFetched: boolean;
   readonly users: User[];
   readonly usersFetched: boolean;
+  readonly directChannelsUserIds: Record<number, number[]>;
 }
 
 export const initialState: SidebarState = {
@@ -30,13 +35,15 @@ export const initialState: SidebarState = {
   channelsFetched: false,
   users: [],
   usersFetched: false,
+  directChannelsUserIds: {},
 };
 
 export const fetchChannels = createAsyncThunk(
   'sidebar/fetchChannels',
   async () => {
-    const { data } = await fetchChannelsApi();
-    return data.data;
+    const response = await fetchChannelsApi();
+    const { data, direct_channels_user_ids } = response.data;
+    return { data: data, direct_channels_user_ids };
   }
 );
 
@@ -51,8 +58,11 @@ const sidebarSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchChannels.fulfilled, (state, action) => {
-      state.channels = action.payload;
+      const { data: channels, direct_channels_user_ids } = action.payload;
+
+      state.channels = channels;
       state.channelsFetched = true;
+      state.directChannelsUserIds = direct_channels_user_ids;
     });
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
       state.users = action.payload;

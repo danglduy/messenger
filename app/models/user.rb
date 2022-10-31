@@ -6,4 +6,12 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
+
+  def direct_channel_with(user)
+    channel = self.channels.channel_type_direct.find do |channel|
+      channel.participations.pluck(:user_id).include?(user.id)
+    end
+
+    return channel if channel.present?
+  end
 end
