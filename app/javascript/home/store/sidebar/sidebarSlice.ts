@@ -24,17 +24,13 @@ export interface User {
 
 export interface SidebarState {
   readonly channels: Channel[];
-  readonly channelsFetched: boolean;
   readonly users: User[];
-  readonly usersFetched: boolean;
   readonly directChannelsUserIds: Record<number, number[]>;
 }
 
 export const initialState: SidebarState = {
   channels: [],
-  channelsFetched: false,
   users: [],
-  usersFetched: false,
   directChannelsUserIds: {},
 };
 
@@ -61,12 +57,10 @@ const sidebarSlice = createSlice({
       const { data: channels, direct_channels_user_ids } = action.payload;
 
       state.channels = channels;
-      state.channelsFetched = true;
       state.directChannelsUserIds = direct_channels_user_ids;
     });
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
       state.users = action.payload;
-      state.usersFetched = true;
     });
   },
 });

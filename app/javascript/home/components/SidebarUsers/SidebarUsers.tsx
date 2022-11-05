@@ -8,16 +8,13 @@ import { classNames } from '../../utils';
 
 export function SidebarUsers() {
   const dispatch = useAppDispatch();
-  const { users, usersFetched, directChannelsUserIds } =
-    useAppSelector(selectSidebar);
+  const { users, directChannelsUserIds } = useAppSelector(selectSidebar);
   const { currentUser } = useAppSelector(selectGlobal);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!usersFetched) {
-      dispatch(fetchUsers());
-    }
-  }, [usersFetched, dispatch]);
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
   const directUsersChannels: Record<number, number> = useMemo(() => {
     const usersChannels: Record<number, number> = {};
