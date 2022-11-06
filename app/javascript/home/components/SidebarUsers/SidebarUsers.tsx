@@ -12,10 +12,6 @@ export function SidebarUsers() {
   const { currentUser } = useAppSelector(selectGlobal);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
-
   const directUsersChannels: Record<number, number> = useMemo(() => {
     const usersChannels: Record<number, number> = {};
 
@@ -41,6 +37,10 @@ export function SidebarUsers() {
       navigate(`/channels/${channel.id}`);
     }
   };
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
   return (
     <nav className="space-y-1 px-2 py-4">

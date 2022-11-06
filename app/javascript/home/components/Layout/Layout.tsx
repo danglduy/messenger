@@ -18,15 +18,15 @@ export function Layout({ children }: { children?: React.ReactNode }) {
   const dispatch = useAppDispatch();
   const { currentUser } = useAppSelector(selectGlobal);
 
+  const onLogout = () => {
+    dispatch(logout());
+  };
+
   useEffect(() => {
     if (!currentUser) {
       dispatch(fetchCurrentUser());
     }
   }, [currentUser, dispatch]);
-
-  const onLogout = () => {
-    dispatch(logout());
-  };
 
   return (
     <>

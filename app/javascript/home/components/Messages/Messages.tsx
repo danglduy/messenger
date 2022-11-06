@@ -48,6 +48,29 @@ export function Messages() {
 
   const [messageContent, setMessageContent] = useState('');
 
+  const messagesVisible = useMemo(() => {
+    return String(channelId) === params.id;
+  }, [channelId, params?.id]);
+
+  const onMessageContentChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setMessageContent(e.currentTarget.value);
+    },
+    []
+  );
+
+  const onSendMessage = useCallback(
+    (_e: React.MouseEvent<HTMLButtonElement>) => {
+      if (messageContent.trim().length > 0) {
+        dispatch(
+          sendMessage({ channelId, messageContent: messageContent.trim() })
+        );
+        setMessageContent('');
+      }
+    },
+    [dispatch, channelId, messageContent]
+  );
+
   useEffect(() => {
     if (params.id) {
       if (params.id !== String(channelId)) {
@@ -75,29 +98,6 @@ export function Messages() {
       };
     }
   }, [dispatch, channelId, params?.id]);
-
-  const messagesVisible = useMemo(() => {
-    return String(channelId) === params.id;
-  }, [channelId, params?.id]);
-
-  const onMessageContentChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setMessageContent(e.currentTarget.value);
-    },
-    []
-  );
-
-  const onSendMessage = useCallback(
-    (_e: React.MouseEvent<HTMLButtonElement>) => {
-      if (messageContent.trim().length > 0) {
-        dispatch(
-          sendMessage({ channelId, messageContent: messageContent.trim() })
-        );
-        setMessageContent('');
-      }
-    },
-    [dispatch, channelId, messageContent]
-  );
 
   return (
     <Layout>
