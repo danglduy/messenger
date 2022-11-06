@@ -2,12 +2,15 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { Bars3BottomLeftIcon, BellIcon } from '@heroicons/react/24/outline';
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import axios from 'axios';
 
 import { classNames } from '../../utils';
 import Sidebar from '../Sidebar';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchCurrentUser, selectGlobal } from '../../store/global/globalSlice';
+import {
+  fetchCurrentUser,
+  logout,
+  selectGlobal,
+} from '../../store/global/globalSlice';
 
 export function Layout({ children }: { children?: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -21,16 +24,8 @@ export function Layout({ children }: { children?: React.ReactNode }) {
     }
   }, [currentUser, dispatch]);
 
-  const logout = async () => {
-    const csrfToken = (
-      document.getElementsByName('csrf-token')[0] as HTMLMetaElement
-    ).content;
-
-    try {
-      await axios.delete('/logout', { headers: { 'X-CSRF-Token': csrfToken } });
-    } catch {} // There were something wrong with axios after logout
-
-    window.location.reload();
+  const onLogout = () => {
+    dispatch(logout());
   };
 
   return (
@@ -108,7 +103,7 @@ export function Layout({ children }: { children?: React.ReactNode }) {
                               active ? 'bg-gray-100' : '',
                               'block px-4 py-2 text-sm text-gray-700 hover:cursor-pointer'
                             )}
-                            onClick={logout}
+                            onClick={onLogout}
                           >
                             Logout
                           </span>

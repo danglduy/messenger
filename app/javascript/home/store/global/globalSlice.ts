@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { startAppListening } from '../listener';
 import { RootState } from '../store';
-import { fetchCurrentUserApi } from './globalApi';
+import { fetchCurrentUserApi, logoutApi } from './globalApi';
 
 export interface User {
   id: number;
@@ -24,6 +25,10 @@ export const fetchCurrentUser = createAsyncThunk(
   }
 );
 
+export const logout = createAsyncThunk('global/logout', async () => {
+  await logoutApi();
+});
+
 const globalSlice = createSlice({
   name: 'global',
   initialState,
@@ -34,6 +39,13 @@ const globalSlice = createSlice({
 
       state.currentUser = user;
     });
+  },
+});
+
+startAppListening({
+  actionCreator: logout.fulfilled,
+  effect: (action, listenerApi) => {
+    window.location.reload();
   },
 });
 
