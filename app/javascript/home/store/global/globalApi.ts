@@ -7,14 +7,6 @@ export const fetchCurrentUserApi: () => Promise<
   return await axios.get(`/api/users/me`);
 };
 
-export const logoutApi: () => Promise<void> = async () => {
-  const csrfToken = (
-    document.getElementsByName('csrf-token')[0] as HTMLMetaElement
-  ).content;
-
-  try {
-    return await axios.delete('/logout', {
-      headers: { 'X-CSRF-Token': csrfToken },
-    });
-  } catch {} // There were something wrong with axios after logout
+export const logoutApi = async () => {
+  return await axios.delete('/api/logout');
 };
