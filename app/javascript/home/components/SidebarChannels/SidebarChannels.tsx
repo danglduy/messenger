@@ -4,20 +4,16 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   fetchChannels,
   selectGroupChannels,
-  selectSidebar,
 } from '../../store/sidebar/sidebarSlice';
 import { classNames } from '../../utils';
 
 export function SidebarChannels() {
   const dispatch = useAppDispatch();
-  const { channelsFetched } = useAppSelector(selectSidebar);
   const groupChannels = useAppSelector(selectGroupChannels);
 
   useEffect(() => {
-    if (!channelsFetched) {
-      dispatch(fetchChannels());
-    }
-  }, [channelsFetched, dispatch]);
+    dispatch(fetchChannels());
+  }, [dispatch]);
 
   return (
     <nav className="space-y-1 px-2 py-4">

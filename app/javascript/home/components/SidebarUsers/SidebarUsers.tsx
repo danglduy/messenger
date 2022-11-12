@@ -2,22 +2,20 @@ import React, { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { selectGlobal } from '../../store/global/globalSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { createDirectConversationApi } from '../../store/sidebar/sidebarApi';
-import { fetchUsers, selectSidebar } from '../../store/sidebar/sidebarSlice';
+import {
+  createDirectConversation,
+  fetchUsers,
+  selectSidebar,
+  setDirectChannelId,
+} from '../../store/sidebar/sidebarSlice';
 import { classNames } from '../../utils';
 
 export function SidebarUsers() {
   const dispatch = useAppDispatch();
-  const { users, usersFetched, directChannelsUserIds } =
+  const { users, directChannelsUserIds, directChannelId } =
     useAppSelector(selectSidebar);
   const { currentUser } = useAppSelector(selectGlobal);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!usersFetched) {
-      dispatch(fetchUsers());
-    }
-  }, [usersFetched, dispatch]);
 
   const directUsersChannels: Record<number, number> = useMemo(() => {
     const usersChannels: Record<number, number> = {};
@@ -34,16 +32,25 @@ export function SidebarUsers() {
     return usersChannels;
   }, [currentUser?.id, directChannelsUserIds]);
 
-  const onOpenDirectConversation = async (userId: number) => {
+  const onOpenDirectConversation = (userId: number) => {
     const channelId = directUsersChannels[userId];
     if (channelId) {
       navigate(`/channels/${channelId}`);
     } else {
-      const response = await createDirectConversationApi({ userId });
-      const channel = response.data.data;
-      navigate(`/channels/${channel.id}`);
+      dispatch(createDirectConversation({ userId }));
     }
   };
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (directChannelId !== -1) {
+      dispatch(setDirectChannelId({ directChannelId: -1 }));
+      navigate(`/channels/${directChannelId}`);
+    }
+  }, [directChannelId, navigate, dispatch]);
 
   return (
     <nav className="space-y-1 px-2 py-4">

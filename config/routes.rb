@@ -15,5 +15,7 @@ Rails.application.routes.draw do
         get :me
       end
     end
+
+    delete :logout, to: 'sessions#destroy'
   end
 end

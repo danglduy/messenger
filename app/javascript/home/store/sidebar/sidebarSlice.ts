@@ -2,6 +2,7 @@ import {
   createAsyncThunk,
   createSelector,
   createSlice,
+  PayloadAction,
 } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import {
@@ -24,18 +25,16 @@ export interface User {
 
 export interface SidebarState {
   readonly channels: Channel[];
-  readonly channelsFetched: boolean;
   readonly users: User[];
-  readonly usersFetched: boolean;
   readonly directChannelsUserIds: Record<number, number[]>;
+  readonly directChannelId: number;
 }
 
 export const initialState: SidebarState = {
   channels: [],
-  channelsFetched: false,
   users: [],
-  usersFetched: false,
   directChannelsUserIds: {},
+  directChannelId: -1,
 };
 
 export const fetchChannels = createAsyncThunk(
@@ -52,21 +51,37 @@ export const fetchUsers = createAsyncThunk('sidebar/fetchUsers', async () => {
   return data.data;
 });
 
+export const createDirectConversation = createAsyncThunk(
+  'sidebar/createDirectConversation',
+  async ({ userId }: { userId: number }) => {
+    const { data } = await createDirectConversationApi({ userId });
+    return data.data;
+  }
+);
+
 const sidebarSlice = createSlice({
   name: 'sidebar',
   initialState,
-  reducers: {},
+  reducers: {
+    setDirectChannelId: (
+      state,
+      action: PayloadAction<{ directChannelId: number }>
+    ) => {
+      state.directChannelId = action.payload.directChannelId;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchChannels.fulfilled, (state, action) => {
       const { data: channels, direct_channels_user_ids } = action.payload;
 
       state.channels = channels;
-      state.channelsFetched = true;
       state.directChannelsUserIds = direct_channels_user_ids;
     });
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
       state.users = action.payload;
-      state.usersFetched = true;
+    });
+    builder.addCase(createDirectConversation.fulfilled, (state, action) => {
+      state.directChannelId = action.payload.id;
     });
   },
 });
@@ -79,5 +94,7 @@ export const selectChannels = createSelector(
 export const selectGroupChannels = createSelector(selectChannels, (channels) =>
   channels.filter((channel) => channel.channel_type === 'group')
 );
+
+export const { setDirectChannelId } = sidebarSlice.actions;
 
 export default sidebarSlice.reducer;

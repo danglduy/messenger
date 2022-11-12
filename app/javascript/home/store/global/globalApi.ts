@@ -6,3 +6,7 @@ export const fetchCurrentUserApi: () => Promise<
 > = async () => {
   return await axios.get(`/api/users/me`);
 };
+
+export const logoutApi = async () => {
+  return await axios.delete('/api/logout');
+};
